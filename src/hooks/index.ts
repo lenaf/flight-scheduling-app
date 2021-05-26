@@ -1,40 +1,37 @@
 
-import firebase from 'firebase';
 import { useEffect, useState } from 'react';
+import axios from 'axios'
 
-export const useFetchTasksForUser = (user: firebase.User) => {
-    const [tasks, setTasks] = useState<ITask[]>([]);
+export const useFetchAircrafts = () => {
+    const [aircrafts, setAircrafts] = useState<IAircraft[]>([]);
     const [loading, setLoading] = useState(true)
     useEffect(() => {
-        firebase.firestore().collection("tasks")
-            .where("userId", "==", user.uid)
-            .onSnapshot(snapshot => setTasks(snapshot.docs.map(doc =>
-                ({ id: doc.id, ...doc.data() } as unknown as ITask))))
-        setLoading(false);
+        axios.get('https://infinite-dawn-93085.herokuapp.com/aircrafts')
+            .then(res => {
+                console.log(res)
+                setAircrafts(res.data.data)
+                setLoading(false);
+            })
+            .catch(err => console.log(err))
     }, [])
-    return { tasks, loading }
+    return { aircrafts, loading }
 }
 
-export const useAddTaskForUser = (user: firebase.User) => (newTask: ITaskInput) =>
-    firebase.firestore().collection("tasks")
-        .add({ ...newTask, userId: user.uid, completed: false });
+export const useFetchFlights = () => {
+    const [flights, setFlights] = useState<IFlight[]>([]);
+    const [loading, setLoading] = useState(true)
+    useEffect(() => {
+        axios.get('https://infinite-dawn-93085.herokuapp.com/flights')
+            .then(res => {
+                console.log(res)
+                setFlights(res.data.data)
+                setLoading(false);
 
+            })
+            .catch(err => console.log(err))
+    }, [])
+    return { flights, loading }
+}
 
-export const useMarkTaskComplete = () => (task: ITask, completed: boolean) =>
-    firebase.firestore().collection("tasks")
-        .doc(task.id).update({ completed });
-
-
-export const useEditTask = () => (task: ITask) =>
-    firebase.firestore().collection("tasks")
-        .doc(task.id).update({
-            description: task.description,
-            title: task.title,
-            dueDate: task.dueDate
-        });
-
-export const useDeleteTask = () => (task: ITask) =>
-    firebase.firestore().collection("tasks")
-        .doc(task.id).delete();
 
 
