@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Col, Dropdown, Menu, Row, Tooltip } from 'antd';
+import { Button, Col, Dropdown, Menu, Row, Tooltip, Tag } from 'antd';
 import moment from 'moment';
 import { CloseOutlined } from '@ant-design/icons';
 
@@ -45,12 +45,14 @@ const Flight: React.FC<IProps> = ({
           <Button type='primary' onClick={e => e.preventDefault()}>Assign</Button>
         </Dropdown> :
           <small>No available aircrafts</small> :
-          <Row align='middle'>
-            <div className='mr-1'>{`Aircraft ${flight.aircraftId}`}</div>
-            <Tooltip title="Clear assignment">
-              <Button type='link' size='small' shape='circle' icon={<CloseOutlined style={{ verticalAlign: 'initial' }} />} onClick={() => updateFlightAircraft(null)}></Button>
-            </Tooltip>
-          </Row>
+          <Tag >
+            <Row align='middle'>
+              <div className='mr-1'>{`Aircraft ${flight.aircraftId}`}</div>
+              <Tooltip title="Clear assignment">
+                <Button type='link' size='small' shape='circle' icon={<CloseOutlined style={{ verticalAlign: 'initial' }} />} onClick={() => updateFlightAircraft(null)}></Button>
+              </Tooltip>
+            </Row>
+          </Tag>
         }
       </Col>
     </Row>
